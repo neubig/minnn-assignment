@@ -5,7 +5,7 @@ This is an exercise in developing a minimalist neural network toolkit for NLP, p
 
 It contains:
 1. **minnn.py:** This is what you'll need to implement. It implements a very minimalist version of a dynamic neural network toolkit (like [PyTorch](https://github.com/pytorch/pytorch) or [Dynet](https://github.com/clab/dynet)). Some code is provided, but important functionality is not included.
-2. **classifier.py:** training code for a [Deep Averaging Network](https://www.aclweb.org/anthology/P15-1162.pdf) for text classification using minnn. You can feel free to make any modifications to make it a better model, *but* the  
+2. **classifier.py:** training code for a [Deep Averaging Network](https://www.aclweb.org/anthology/P15-1162.pdf) for text classification using minnn. You can feel free to make any modifications to make it a better model, *but* the original version of `classifier.py` must also run with your `minnn.py` implementation.
 3. **data/:** Two datasets, one from the Stanford Sentiment Treebank with tree info removed and another from IMDb reviews.
 
 ## Assignment Details
