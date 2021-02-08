@@ -27,7 +27,17 @@ The submission file should be a zip file with the following structure (assuming 
 - ANDREWID/sst-test-output.txt `# output of the test set for SST data`
 - ANDREWID/cfimdb-dev-output.txt `# output of the dev set for CFIMDB data`
 - ANDREWID/cfimdb-test-output.txt `# output of the test set for CFIMDB data`
-- ANDREWID/report.pdf `# (optional), report`
+- ANDREWID/report.pdf `# (optional), report. here you can describe anything particularly new or interesting that you did`
+
+Grading information:
+- **A+:** Submissions that implement something new and achieve particularly large accuracy improvements (e.g. 2\% over the baseline on SST)
+- **A:** You additionally implement something else on top of the missing pieces, some examples include:
+    - Implementing another optimizer such as Adam
+    - Incorporating pre-trained word embeddings, such as those from [fasttext](https://fasttext.cc/)
+    - Changing the model architecture significantly
+- **A-:** You implement all the missing pieces and the original `classifier.py` code achieves comparable accuracy to our reference implementation (about 41% on SST)
+- **B+:** All missing pieces are implemented, but accuracy is not comparable to the reference.
+- **B or below:** Some parts of the missing pieces are not implemented.
 
 ## References
 

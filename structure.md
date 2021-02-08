@@ -4,7 +4,7 @@ Here is a walk-through of the main classes in `minnn.py`.
 
 ## xp
 
-`xp` is an alias for the numerical processing library that we're using to make computation efficient. By default we use [numpy](https://numpy.org/), a widely used numerical library that you may know of already. Alternatively, you can use `cupy`, an interface that is basically identical to `numpy`, but allows computation on the GPU, which can be useful for speed purposes.
+`xp` is an alias for the numerical processing library that we're using to make computation efficient. By default we use [numpy](https://numpy.org/), a widely used numerical library that you may know of already. For brief tutorials, you can check the links provided at the end of this page. Alternatively, you can use `cupy`, an interface that is basically identical to `numpy`, but allows computation on the GPU, which can be useful for speed purposes.
 
 - The choice of computation library can be specified by the environment variable `WHICH_XP`.
 - For this assignment using `numpy` with CPU will already be fast enough (around 6s per iter in our running). In our final testing, we would probably use `numpy`. (Nevertheless please feel free to use `cupy` if you find it is much faster.)
@@ -101,3 +101,10 @@ We provide an implementation of `SGDTrainer` and please similarly implement one 
 - In `classifier.py`, we also provide an option of `do_gradient_check` to do gradient checking with finite differences, which can be utilized for debugging.
 - Please do not change another other existing parts of `minnn.py` (other than the `to-be-implemented` ones) and the method signatures (name and argument names). But surely feel free to add any helper functions as long as they do not conflict with existing ones.
 - One thing to notice is the difference between `Tensor` and `xp.ndarray`. The general rule of thumb is that the returning value of `Op*`'s `forward` should be a `Tensor`. Nevertheless, in the `Op.ctx`, we can store both `Tensor` and `xp.ndarray`. In addition, please check the type hint of the arguments and other provided `Op*` for reference.
+
+# Resources
+- Numpy tutorials
+  * [Official Numpy tutorial page](https://numpy.org/learn/)
+  * [The Ultimate Beginner’s Guide to NumPy](https://towardsdatascience.com/the-ultimate-beginners-guide-to-numpy-f5a2f99aef54)
+  * [NumPy Introduction](https://www.w3schools.com/python/numpy_intro.asp)
+  * [An introduction to Numpy and Scipy](https://sites.engineering.ucsb.edu/~shell/che210d/numpy.pdf)
