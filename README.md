@@ -17,6 +17,7 @@ Important Notes:
     - `mkdir -p ANDREWID`
     - `python classifier.py --train=data/sst-train.txt --dev=data/sst-dev.txt --test=data/sst-test.txt --dev_out=ANDREWID/sst-dev-output.txt --test_out=ANDREWID/sst-test-output.txt`
     - `python classifier.py --train=data/cfimdb-train.txt --dev=data/cfimdb-dev.txt --test=data/cfimdb-test.txt --dev_out=ANDREWID/cfimdb-dev-output.txt --test_out=ANDREWID/cfimdb-test-output.txt`
+- Reference accuracies: with our implementation and the default hyper-parameters, the accuracies on sst is dev=0.4114, test=0.4253, and on cfimdb dev=0.8857.
 
 The submission file should be a zip file with the following structure (assuming the andrew id is `ANDREWID`):
 

@@ -97,7 +97,7 @@ We provide an implementation of `SGDTrainer` and please similarly implement one 
 # Other Notes
 
 - The only external library allowed is `numpy`/`cupy`. No other libs can be utilized, for example, `pytorch` or other tools.
-- With the default settings of `classifier.py`, the accuracies on sst-dev/test are (both) around 41.
+- With the default settings of `classifier.py`, the accuracies on sst are around 41(dev)/42(test).
 - In `classifier.py`, we also provide an option of `do_gradient_check` to do gradient checking with finite differences, which can be utilized for debugging.
 - Please do not change another other existing parts of `minnn.py` (other than the `to-be-implemented` ones) and the method signatures (name and argument names). But surely feel free to add any helper functions as long as they do not conflict with existing ones.
 - One thing to notice is the difference between `Tensor` and `xp.ndarray`. The general rule of thumb is that the returning value of `Op*`'s `forward` should be a `Tensor`. Nevertheless, in the `Op.ctx`, we can store both `Tensor` and `xp.ndarray`. In addition, please check the type hint of the arguments and other provided `Op*` for reference.
