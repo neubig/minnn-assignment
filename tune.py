@@ -63,10 +63,8 @@ def run_them(ranges: list, ncpu: int, shuffle=True):
 
 def main():
     tune_ranges = [
-        [f"--emb_size {z} --hid_size {z}" for z in [64, 128, 256]],
-        [f"--word_drop {z}" for z in [0.1, 0.2, 0.3]],
-        [f"--emb_drop {z} --hid_drop {z}" for z in [0.1, 0.2, 0.333, 0.5]],
-        [f"--lrate {z}" for z in [0.1, 0.02, 0.01, 0.005]],
+        [f"--lrate {z}" for z in [0.02, 0.015, 0.01]],
+        [f"--mrate {z}" for z in [0.85, 0.9]],
         [f"--accu_step {z}" for z in [1, 4, 10, 16]],
     ]
     run_them(tune_ranges, 8)

@@ -23,10 +23,10 @@ def get_args():
     parser.add_argument("--emb_drop", type=float, default=0.333)
     parser.add_argument("--hid_drop", type=float, default=0.333)
     parser.add_argument("--iters", type=int, default=20)
-    parser.add_argument("--lrate", type=float, default=0.1)
+    parser.add_argument("--lrate", type=float, default=0.01)
     parser.add_argument("--lrate_decay", type=float, default=1.)  # 1. means no decay!
-    parser.add_arguemtn("--mrate", type=float, default=0.9)
-    parser.add_argument("--accu_step", type=int, default=16)  # this is actually batch size!
+    parser.add_argument("--mrate", type=float, default=0.85)
+    parser.add_argument("--accu_step", type=int, default=10)  # this is actually batch size!
     parser.add_argument("--model", type=str, default="model.npz")  # save/load model name
     parser.add_argument("--do_gradient_check", type=int, default=0)
     parser.add_argument("--dev_output", type=str, default="output.dev.txt")  # output for dev
