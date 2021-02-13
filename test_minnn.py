@@ -42,8 +42,8 @@ def test_accumulate_grad_sparse(test_mn):
     g0 = np.asarray([1., 2.])
     g1 = np.asarray([3., 4.])
     t = test_mn.astensor([[0., 0.], [0., 0.], [0., 0.]])
-    t.accumulate_grad_sparse([(0, g0), (2, g1)])
-    assert np.allclose(t.get_dense_grad(), np.asarray([g0, [0.,0.], g1]))
+    t.accumulate_grad_sparse([(0, g0), (2, g1), (2, g0)])
+    assert np.allclose(t.get_dense_grad(), np.asarray([g0, [0.,0.], g0+g1]))
     # --
 
 def test_xavier_uniform(test_mn):
@@ -53,28 +53,26 @@ def test_xavier_uniform(test_mn):
     # --
 
 def test_momentum_update(test_mn):
-    shape = [10, 20]
+    shape = [2]
     m1 = test_mn.Model()
-    p1 = m1.add_parameters(shape)
+    p1 = m1.add_parameters(shape, 'constant', val=0.)
     # --
-    t1 = test_mn.MomentumTrainer(m1)
+    t1 = test_mn.MomentumTrainer(m1, lrate=0.1, mrate=0.9)
     for _ in range(5):
-        g = np.random.random(shape)
+        g = np.array([1.,1.])
         p1.accumulate_grad(g)
         t1.update()
-    for _ in range(5):
-        gs = [(np.random.randint(0, shape[0]), np.random.random(shape[1])) for z in range(5)]
-        p1.accumulate_grad_sparse(gs)
-        t1.update()
+    assert np.allclose(p1.data, np.array([-0.131441, -0.131441])), \
+        "This is the values using our implementation, there can be other versions for momentum_update, you can choose to use others!"
     # --
 
 def test_lookup(test_mn):
     t = test_mn.astensor([[1., 2.], [3., 4.], [5., 6.]])
-    v = test_mn.lookup(t, [1,0])
-    assert np.allclose(v.data, np.asarray([[3., 4.], [1., 2.]]))
-    v.accumulate_grad(np.asarray([[1., 1.], [1., 1.]]))
+    v = test_mn.lookup(t, [1,0,1])
+    assert np.allclose(v.data, np.asarray([[3., 4.], [1., 2.], [3., 4.]]))
+    v.accumulate_grad(np.asarray([[1., 1.], [1., 1.], [2., 3.]]))
     v.op.backward()
-    assert np.allclose(t.get_dense_grad(), np.asarray([[1., 1.], [1., 1.], [0., 0.]]))
+    assert np.allclose(t.get_dense_grad(), np.asarray([[1., 1.], [3., 4.], [0., 0.]]))
 
 def test_dot(test_mn):
     w, h = test_mn.astensor([[0., 1.], [2., 3.]]), test_mn.astensor([1., 2.])
@@ -88,9 +86,9 @@ def test_tanh(test_mn):
     x = test_mn.astensor([0., 1., 2., 3.])
     v = test_mn.tanh(x)
     assert np.allclose(v.data, np.asarray([0., 0.76159416, 0.96402758, 0.99505475]))
-    v.accumulate_grad(np.asarray([1.,1.,1.,1.]))
+    v.accumulate_grad(np.asarray([1.,2.,3.,4.]))
     v.op.backward()
-    assert np.allclose(x.get_dense_grad(), np.asarray([1., 0.41997434, 0.07065082, 0.00986604]))
+    assert np.allclose(x.get_dense_grad(), np.asarray([1., 0.83994868, 0.21195247, 0.03946415]))
     # --
 
 # --
