@@ -19,7 +19,7 @@ Important Notes:
     - `python classifier.py --train=data/sst-train.txt --dev=data/sst-dev.txt --test=data/sst-test.txt --dev_out=ANDREWID/sst-dev-output.txt --test_out=ANDREWID/sst-test-output.txt`
     - `python classifier.py --train=data/cfimdb-train.txt --dev=data/cfimdb-dev.txt --test=data/cfimdb-test.txt --dev_out=ANDREWID/cfimdb-dev-output.txt --test_out=ANDREWID/cfimdb-test-output.txt`
 - Please remember to set your default hyper-parameter settings in your own `classifier.py` since we will also run your `classifier.py` using the above commands (without extra arguments).
-- Reference accuracies: with our implementation and the default hyper-parameters, the mean(std) of accuracies with 10 different random seeds on sst is dev=0.4045(0.0070), test=0.4069(0.0105), and on cfimdb dev=0.8792(0.0084). If you implement things exactly in our way and use the default random seed and use the same environment (python 3.8 + numpy 1.18 or 1.19), you may get the accuracies of dev=0.4114, test=0.4253, and on cfimdb dev=0.8857.
+- Reference accuracies: with our implementation and the default hyper-parameters, the mean(std) of accuracies with 10 different random seeds on sst is dev=0.4031(0.0105), test=0.4070(0.0114), and on cfimdb dev=0.8980(0.0093). If you implement things exactly in our way and use the default random seed and use the same environment (python 3.8 + numpy 1.18 or 1.19), you may get the accuracies of dev=0.4015, test=0.4109, and on cfimdb dev=0.9020.
 
 The submission file should be a zip file with the following structure (assuming the andrew id is `ANDREWID`):
 

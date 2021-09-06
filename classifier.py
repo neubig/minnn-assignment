@@ -1,14 +1,10 @@
 from collections import defaultdict
+import os
 import time
 import random
 import minnn as mn
 import numpy as np
 import argparse
-
-# --
-random.seed(12345)
-np.random.seed(12345)
-# --
 
 # --
 def get_args():
@@ -24,7 +20,7 @@ def get_args():
     parser.add_argument("--hid_drop", type=float, default=0.333)
     parser.add_argument("--pooling_method", type=str, default="max", choices=["sum", "avg", "max"])
     parser.add_argument("--iters", type=int, default=20)
-    parser.add_argument("--lrate", type=float, default=0.01)
+    parser.add_argument("--lrate", type=float, default=0.015)
     parser.add_argument("--lrate_decay", type=float, default=1.)  # 1. means no decay!
     parser.add_argument("--mrate", type=float, default=0.85)
     parser.add_argument("--accu_step", type=int, default=10)  # this is actually batch size!
@@ -38,6 +34,9 @@ def get_args():
 
 def main():
     args = get_args()
+    _seed = os.environ.get("MINNN_SEED", 12341)
+    random.seed(_seed)
+    np.random.seed(_seed)
     # --
     # Functions to read in the corpus
     w2i = defaultdict(lambda: len(w2i))  # map of word str to word index
