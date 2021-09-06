@@ -288,6 +288,15 @@ class OpSum(Op):
             emb.accumulate_grad(g)
         # --
 
+class OpMax(Op):
+    def __init__(self):
+        raise NotImplementedError
+
+class OpAvg(Op):
+    # NOTE: Implementation of OpAvg is optional, it can be skipped if you wish
+    def __init__(self):
+        super().__init__()
+
 class OpDot(Op):
     def __init__(self):
         raise NotImplementedError

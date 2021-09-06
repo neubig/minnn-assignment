@@ -91,10 +91,10 @@ def test_dot(test_mn):
     w, h = test_mn.astensor([[0., 1.], [2., 3.]]), test_mn.astensor([1., 2.])
     v = test_mn.dot(w, h)
     assert is_allclose(v.data, np.asarray([2., 8.]))
-    v.accumulate_grad(np.asarray([1., 1.]))
+    v.accumulate_grad(np.asarray([1., 3.]))
     v.op.backward()
-    assert is_allclose(w.get_dense_grad(), np.asarray([[1.,2.],[1.,2.]]))
-    assert is_allclose(h.get_dense_grad(), np.asarray([2.,4.]))
+    assert is_allclose(w.get_dense_grad(), np.asarray([[1.,2.],[3.,6.]]))
+    assert is_allclose(h.get_dense_grad(), np.asarray([6.,10.]))
 
 def test_tanh(test_mn):
     x = test_mn.astensor([0., 1., 2., 3.])
@@ -103,6 +103,24 @@ def test_tanh(test_mn):
     v.accumulate_grad(np.asarray([1.,2.,3.,4.]))
     v.op.backward()
     assert is_allclose(x.get_dense_grad(), np.asarray([1., 0.83994868, 0.21195247, 0.03946415]))
+    # --
+
+def test_avg(test_mn):
+    x = test_mn.astensor([[0., 1., 2.], [3., 5., 11.]])
+    v = test_mn.avg(x, 0)
+    assert is_allclose(v.data, np.asarray([1.5, 3., 6.5]))
+    v.accumulate_grad(np.asarray([1.,2.,3.]))
+    v.op.backward()
+    assert is_allclose(x.get_dense_grad(), np.asarray([[0.5,1.0,1.5], [0.5,1.0,1.5]]))
+    # --
+
+def test_max(test_mn):
+    x = test_mn.astensor([[0., 5., 2.], [-2., 6., 1.]])
+    v = test_mn.max(x, 0)
+    assert is_allclose(v.data, np.asarray([0., 6., 2.]))
+    v.accumulate_grad(np.asarray([1.,2.,3.]))
+    v.op.backward()
+    assert is_allclose(x.get_dense_grad(), np.asarray([[1., 0., 3.], [0., 2., 0.]]))
     # --
 
 # --
@@ -118,6 +136,8 @@ def main(minnn: str):
         ("lookup", 1.),
         ("dot", 1.),
         ("tanh", 1.),
+        ("avg", 1.),
+        ("max", 1.),
     ]
     for name, weight in test_table:
         test_f = globals()[f"test_{name}"]

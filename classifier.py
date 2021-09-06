@@ -22,6 +22,7 @@ def get_args():
     parser.add_argument("--word_drop", type=float, default=0.2)
     parser.add_argument("--emb_drop", type=float, default=0.333)
     parser.add_argument("--hid_drop", type=float, default=0.333)
+    parser.add_argument("--pooling_method", type=str, default="max", choices=["sum", "avg", "max"])
     parser.add_argument("--iters", type=int, default=20)
     parser.add_argument("--lrate", type=float, default=0.01)
     parser.add_argument("--lrate_decay", type=float, default=1.)  # 1. means no decay!
@@ -39,30 +40,30 @@ def main():
     args = get_args()
     # --
     # Functions to read in the corpus
-    w2i = defaultdict(lambda: len(w2i))
-    t2i = defaultdict(lambda: len(t2i))
-    UNK = w2i["<unk>"]
+    w2i = defaultdict(lambda: len(w2i))  # map of word str to word index
+    t2i = defaultdict(lambda: len(t2i))  # map of tag str to tag index
+    UNK = w2i["<unk>"]  # UNK will be idx=0
     def read_dataset(filename):
-        with open(filename, "r") as f:
+        with open(filename, "r", encoding="utf-8") as f:
             for line in f:
                 tag, words = line.lower().strip().split(" ||| ")
                 yield ([w2i[x] for x in words.split(" ")], t2i[tag])
 
     # Read in the data
-    train = list(read_dataset(args.train))
-    w2i = defaultdict(lambda: UNK, w2i)
-    dev = list(read_dataset(args.dev))
-    test = list(read_dataset(args.test))
-    nwords = len(w2i)
-    ntags = len(t2i)
+    train = list(read_dataset(args.train))  # read the train set and map to indexes
+    w2i = defaultdict(lambda: UNK, w2i)  # after collecting training, no longer accept new words
+    dev = list(read_dataset(args.dev))  # read the dev set and map to indexes
+    test = list(read_dataset(args.test))  # read the test set and map to indexes
+    nwords = len(w2i)  # number of words in the vocab
+    ntags = len(t2i)  # number of tags
     # --
-    # get i2w for outputting
-    i2w = ["UNK"] * len(w2i)
-    i2t = ["UNK"] * len(t2i)
-    for _w, _i in w2i.items():
-        if _i>0:
+    # get back-mappings (idx to str) for outputting
+    i2w = ["UNK"] * len(w2i)  # back-mapping: word index to word str
+    i2t = ["UNK"] * len(t2i)  # back-mapping: tag index to tag str
+    for _w, _i in w2i.items():  # fill the back-mapping of words
+        if _i>0:  # no filling of UNK and new words (queried but not in training because of defaultdict)
             i2w[_i] = _w
-    for _t, _i in t2i.items():
+    for _t, _i in t2i.items():  # fill the back-mapping of tags
         i2t[_i] = _t
     # --
 
@@ -79,20 +80,21 @@ def main():
     b_h = [model.add_parameters((HID_SIZE)) for lay in range(HID_LAY)]
     W_sm = model.add_parameters((ntags, HID_SIZE), initializer='xavier_uniform')  # Softmax weights
     b_sm = model.add_parameters((ntags))  # Softmax bias
+    pooling_f = {"sum": mn.sum, "avg": mn.avg, "max": mn.max}[args.pooling_method]
 
     # A function to calculate scores for one value
     def calc_scores(words, is_training):
         # word drop in training
         if is_training:
             _word_drop = args.word_drop
-            if _word_drop > 0.:
+            if _word_drop > 0.:  # here we replace by UNK, there can be better strategies
                 words = [(UNK if s<_word_drop else w) for w,s in zip(words, np.random.random(len(words)))]
         # --
         emb = mn.lookup(W_emb, words)  # [len, D]
         emb = mn.dropout(emb, args.emb_drop, is_training)
-        h = mn.sum(emb, axis=0)  # [D]
+        h = pooling_f(emb, axis=0)  # [D], aggregate seq-level info into one vector
         for W_h_i, b_h_i in zip(W_h, b_h):
-            h = mn.tanh(mn.dot(W_h_i, h) + b_h_i) # [D]
+            h = mn.tanh(mn.dot(W_h_i, h) + b_h_i)  # [D]
             h = mn.dropout(h, args.hid_drop, is_training)
         return mn.dot(W_sm, h) + b_sm  # [C]
 
@@ -121,7 +123,7 @@ def main():
         # output
         if _output is not None:
             assert len(_predictions) == len(_data)
-            with open(_output, 'w') as fd:
+            with open(_output, 'w', encoding="utf-8") as fd:
                 for _pred, _dd in zip(_predictions, _data):
                     _ws = " ".join([i2w[_widx] for _widx in _dd[0]])
                     fd.write(f"{_pred} ||| {_ws}\n")
@@ -162,7 +164,7 @@ def main():
                     arr_loss, my_loss = _forw()
                     mn.backward(my_loss)
                     # approx. grad
-                    eps = 1e-3
+                    eps = 1e-4
                     for p in model.params:
                         if np.prod(p.shape[0]) == nwords:  # pick one word
                             pick_idx = np.random.choice(words) * EMB_SIZE + np.random.randint(EMB_SIZE)
@@ -173,7 +175,8 @@ def main():
                         p.data.reshape(-1)[pick_idx] -= 2*eps
                         loss1, _ = _forw()
                         p.data.reshape(-1)[pick_idx] += eps
-                        approx_grad = (loss0-loss1) / (2*eps)
+                        # approx_grad = (loss0-loss1) / (2*eps)
+                        approx_grad = (loss0-arr_loss) / eps  # the above might not work with OpMax
                         calc_grad = p.get_dense_grad().reshape(-1)[pick_idx]
                         assert np.isclose(approx_grad, calc_grad, rtol=1.e-3, atol=1.e-6)
                     # clear
