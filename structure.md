@@ -86,21 +86,22 @@ We provide an implementation of `SGDTrainer` and please similarly implement one 
 - Notice that for `update_sparse`, we still need to update the parameters if there are historical `m`, even if there are no gradients for the current step.
 - Please remember to clear gradients (by setting `p.grad=None`) at the end of `update`, similar to `SGDTrainer`.
 
-## `OpLookup` & `OpDot` & `OpTanh`
+## `OpLookup` & `OpDot` & `OpTanh` & `OpMax`
 
 - Please implement the `forward` and `backward` methods for these `Op`s.
 - `OpLookup` represents a "lookup" operation, and accepts a `Tensor` matrix `W_emb` ([N,D]) and a list of word indexes ([n]), it returns another `Tensor` matrix ([n,D]).
 - `OpDot` represents a matrix multiplication, accepting a `Tensor` matrix `W` ([M,N]) and a `Tensor` vector ([N]), it returns another `Tensor` vector ([M]).
 - `OpTanh` calculates a tanh, and accepts any `Tensor` and returns another one with the same shape.
+- `OpMax` calculates the maximum values of a tensor along certain dimension, it accepts a `Tensor` (value) and an `int` (axis), and it returns another `Tensor`.
 
 
 # Other Notes
 
 - The only external library allowed is `numpy`/`cupy`. No other libs can be utilized, for example, `pytorch` or other tools.
-- With the default settings of `classifier.py`, the accuracies on sst are around 41(dev)/42(test).
 - In `classifier.py`, we also provide an option of `do_gradient_check` to do gradient checking with finite differences, which can be utilized for debugging.
 - Please do not change another other existing parts of `minnn.py` (other than the `to-be-implemented` ones) and the method signatures (name and argument names). But surely feel free to add any helper functions as long as they do not conflict with existing ones.
 - One thing to notice is the difference between `Tensor` and `xp.ndarray`. The general rule of thumb is that the returning value of `Op*`'s `forward` should be a `Tensor`. Nevertheless, in the `Op.ctx`, we can store both `Tensor` and `xp.ndarray`. In addition, please check the type hint of the arguments and other provided `Op*` for reference.
+- Please notice that we hide the true labels of cfimdb-test (putting all 0s) in the assignment release.
 
 # Resources
 - Numpy tutorials

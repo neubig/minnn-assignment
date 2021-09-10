@@ -410,4 +410,6 @@ def tanh(param): return OpTanh().full_forward(param)
 def relu(param): return OpRelu().full_forward(param)
 def log_loss(my_scores, tag): return OpLogloss().full_forward(my_scores, tag)
 def dropout(x, drop, is_training): return OpDropout().full_forward(x, drop, is_training)
+def avg(x, axis): return OpAvg().full_forward(x, axis)
+def max(x, axis): return OpMax().full_forward(x, axis)
 # --

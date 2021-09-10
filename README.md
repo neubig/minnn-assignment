@@ -42,11 +42,11 @@ Grading information:
 - **B+:** All missing pieces are implemented, but accuracy is not comparable to the reference.
 - **B or below:** Some parts of the missing pieces are not implemented.
 
-Debugging:
-- There are three tools that can be used for debugging:
-- (1) `check_submit.py` can help to check the submitted zip file (simply run `python check_submit.py ANDREWID.zip`). It will throw assertion errors if the format is not expected, and we will *not accept submissions that fail this check*.
-- (2) `test_minnn.py`, can help check for errors in the individual parts of your implementation.
-- (3) Using the option of `--do_gradient_check 1` when running `classifier.py` to do gradient checking overall. (Remember to turn this option off in your submitted `classifier.py`.)
+Tools:
+- There are three tools that may be useful:
+- (1) `test_minnn.py`, can help check for errors in the individual parts of your implementation.
+- (2) Using the option of `--do_gradient_check 1` when running `classifier.py` to do gradient checking overall. (Remember to turn this option off in your submitted `classifier.py`.)
+- (3) `prepare_submit.py` can help to create(1) or check(2) the to-be-submitted zip file. It will throw assertion errors if the format is not expected, and we will *not accept submissions that fail this check*. Usage: (1) To create and check a zip file with your outputs, run `python3 prepare_submit.py path/to/your/output/dir ANDREWID`, (2) To check your zip file, run `python3 prepare_submit.py path/to/your/submit/zip/file.zip ANDREWID`
 
 ## References
 
