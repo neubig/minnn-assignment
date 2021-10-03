@@ -23,13 +23,6 @@ def search_file(dir: str, filename: str):
     assert len(rets) == 1
     return rets[0]
 
-def load_module(f: str, m: str):
-    import importlib.util
-    spec = importlib.util.spec_from_file_location(m, f)
-    ret = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(ret)
-    return ret
-
 def is_allclose(x, y):
     return np.testing.assert_allclose(x, y, rtol=1.e-3, atol=1.e-5)
 
@@ -139,3 +132,6 @@ def eval_acc(f1: str, f2: str):
     good = sum(a==b for a,b in zip(preds1, preds2))
     print(f"Acc = {good}/{len(preds1)}={good/len(preds1)}")
 # --
+
+if __name__ == "__main__":
+    unittest.main()
