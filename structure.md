@@ -59,7 +59,7 @@ This is simply a collection of initializer methods that produces a `xp.ndarray` 
 ## Backpropable functions
 
 - The remaining `Op*` are all sub-classes of `Op` and denotes a specific function. We provide some operations and ask you to implement some of them.
-- Take `OpDropout` as an example, here we implement the inverted dropout, which scales values by `1/(1-drop)` in forward. In `forward`, (if training), we obtain a `mask` using `xp.random` and multiply the input by this. All the intermediate values (including input and output) are stored using `store_ctx`. In `backward`, we obtain the graident of the output `Tensor` by retriving previous stored values. Then the calcualted gradients are assigned to the input `Tensor` by accumulate_grad.
+- Take `OpDropout` as an example, here we implement the inverted dropout, which scales values by `1/(1-drop)` in forward. In `forward`, (if training), we obtain a `mask` using `xp.random` and multiply the input by this. All the intermediate values (including input and output) are stored using `store_ctx`. In `backward`, we obtain the gradient of the output `Tensor` by retrieving previous stored values. Then the calculated gradients are assigned to the input `Tensor` by accumulate_grad.
 - Finally, there are some shortcut functions to make it more convenient.
 
 
@@ -70,7 +70,7 @@ Notably, `minnn.py` is not completely implemented, and there are some parts that
 ## `Tensor.accumulate_grad` & `Tensor.accumulate_grad_sparse`
 
 - `accumulate_grad` accepts one (dense) `xp.ndarray` and accumulate to the `Tensor`'s dense gradients (`xp.ndarray`).
-- `accumulate_grad_sparse` accepts a list of (index, `xp.ndarray`) and accumulates them to the `Tensor`'s simulated sparase gradients (`dict`).
+- `accumulate_grad_sparse` accepts a list of (index, `xp.ndarray`) and accumulates them to the `Tensor`'s simulated sparse gradients (`dict`).
 - We will check the gradients before and after these methods. Notice that we reuse the `Tensor.grad` for both dense and (simulated) sparse gradients, thus please do not apply both at the same time. (See also `get_dense_grad` of how to convert from simulated sparse gradients to dense ones.)
 
 ## `Initializer.xavier_uniform`
